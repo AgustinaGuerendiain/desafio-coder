@@ -1,2 +1,2 @@
 # desafio-coder
-Desafios del curso de Desarrollo de Aplicaciones - CoderHouse
+Primer desafio del curso de Desarrollo de Aplicaciones - CoderHouse
