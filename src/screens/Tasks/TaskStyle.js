@@ -6,15 +6,4 @@ export default styles = StyleSheet.create({
     height: "100%",
     backgroundColor: colors.secondary,
   },
-  buttonBack: {
-    backgroundColor: colors.primary,
-    height: 56,
-    width: 56,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-  },
 });

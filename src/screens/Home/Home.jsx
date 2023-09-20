@@ -6,7 +6,7 @@ import { AddModal, DeleteModal, TaskItem } from "./components";
 import styles from "./HomeStyle";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-const Home = ({ setTaskSelected }) => {
+const Home = ({ navigation, route }) => {
   const [taskList, setTaskList] = useState(tasks);
   const [idTask, setIdTask] = useState();
 
@@ -33,7 +33,6 @@ const Home = ({ setTaskSelected }) => {
     if (idTask) {
       const updatedTasks = taskList.filter(task => task.id !== idTask);
       setTaskList(updatedTasks);
-      setTaskSelected("");
     }
     setShowModalDelete(false);
   };
@@ -50,7 +49,7 @@ const Home = ({ setTaskSelected }) => {
 
   return (
     <>
-      <Header title={"Lista de Tareas"} />
+      <Header title={"Lista de Tareas"} filter />
       <View style={styles.container}>
         <FlatList
           data={taskList}
@@ -64,8 +63,8 @@ const Home = ({ setTaskSelected }) => {
               toggleTaskComplete={toggleTaskComplete}
               setTaskList={setTaskList}
               taskList={taskList}
-              setTaskSelected={setTaskSelected}
               task={item}
+              navigation={navigation}
             />
           )}
         />

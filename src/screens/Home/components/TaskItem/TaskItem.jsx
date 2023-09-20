@@ -6,12 +6,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import styles from "./TaskItemStyle";
 import { colors } from "../../../../contants/colors";
 
-const TaskItem = ({
-  task,
-  setTaskSelected,
-  handleModal,
-  toggleTaskComplete,
-}) => {
+const TaskItem = ({ task, handleModal, toggleTaskComplete, navigation }) => {
   return (
     <Card style={styles.cardContainer}>
       <View style={styles.containerLeft}>
@@ -40,7 +35,7 @@ const TaskItem = ({
       <View style={styles.containerRight}>
         <TouchableOpacity
           disabled={task.isComplete}
-          onPress={() => setTaskSelected(task)}>
+          onPress={() => navigation.navigate("Task", { task })}>
           <AntDesign
             name="arrowsalt"
             size={20}
