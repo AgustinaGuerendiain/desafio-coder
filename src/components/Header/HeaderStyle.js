@@ -6,7 +6,6 @@ export default styles = StyleSheet.create({
     backgroundColor: colors.primary,
     width: "100%",
     padding: 20,
-    marginBottom: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

@@ -5,20 +5,21 @@ import tasks from "../../data/tasks";
 import { AddModal, DeleteModal, TaskItem } from "./components";
 import styles from "./HomeStyle";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTask,
+  deleteTask,
+  toggleIsComplete,
+} from "../../features/tasksSlice";
 
 const Home = ({ navigation, route }) => {
-  const [taskList, setTaskList] = useState(tasks);
+  const taskList = useSelector(state => state.tasks);
   const [idTask, setIdTask] = useState();
 
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalAddTask, setShowModalAddTask] = useState(false);
 
-  const toggleTaskComplete = taskId => {
-    const updatedTasks = taskList.map(task =>
-      task.id === taskId ? { ...task, isComplete: !task.isComplete } : task,
-    );
-    setTaskList(updatedTasks);
-  };
+  const dispatch = useDispatch();
 
   const handleModalDelete = id => {
     setIdTask(id);
@@ -31,8 +32,7 @@ const Home = ({ navigation, route }) => {
 
   const handleDelete = () => {
     if (idTask) {
-      const updatedTasks = taskList.filter(task => task.id !== idTask);
-      setTaskList(updatedTasks);
+      dispatch(deleteTask(idTask));
     }
     setShowModalDelete(false);
   };
@@ -44,32 +44,28 @@ const Home = ({ navigation, route }) => {
       ...newTask,
       isComplete: false,
     };
-    setTaskList([...taskList, nuevaTarea]);
+    dispatch(addTask(nuevaTarea));
   };
 
   return (
     <>
-      <Header title={"Lista de Tareas"} filter />
+      <View style={{ marginBottom: 16 }}>
+        <Header title={"Lista de Tareas"} filter />
+      </View>
       <View style={styles.container}>
         <FlatList
           data={taskList}
           keyExtractor={task => task.id}
           renderItem={({ item }) => (
             <TaskItem
-              setShowModalDelete={setShowModalDelete}
-              showModalDelete={showModalDelete}
-              handleDelete={handleDelete}
               handleModal={handleModalDelete}
-              toggleTaskComplete={toggleTaskComplete}
-              setTaskList={setTaskList}
-              taskList={taskList}
               task={item}
               navigation={navigation}
             />
           )}
         />
         <TouchableOpacity onPress={handleModalAdd} style={styles.buttonAdd}>
-          <AntDesign name="plus" size={38} color={"#f2f9ff"} />
+          <AntDesign name="plus" size={28} color={"#f2f9ff"} />
         </TouchableOpacity>
       </View>
       <DeleteModal

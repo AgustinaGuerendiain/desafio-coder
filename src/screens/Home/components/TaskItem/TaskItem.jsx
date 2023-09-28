@@ -5,8 +5,16 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import styles from "./TaskItemStyle";
 import { colors } from "../../../../contants/colors";
+import { useDispatch } from "react-redux";
+import { toggleIsComplete } from "../../../../features/tasksSlice";
 
-const TaskItem = ({ task, handleModal, toggleTaskComplete, navigation }) => {
+const TaskItem = ({ task, handleModal, navigation }) => {
+  const dispatch = useDispatch();
+
+  const toggleTaskComplete = () => {
+    dispatch(toggleIsComplete(task.id));
+  };
+
   return (
     <Card style={styles.cardContainer}>
       <View style={styles.containerLeft}>

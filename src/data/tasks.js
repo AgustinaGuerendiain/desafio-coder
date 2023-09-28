@@ -49,37 +49,4 @@ export default [
     difficulty: "Fácil",
     isComplete: false,
   },
-  {
-    id: 7,
-    title: "Limpiar la casa",
-    description: "Dedicar una hora a limpiar y organizar la casa.",
-    category: "home",
-    difficulty: "Moderado",
-    isComplete: false,
-  },
-  {
-    id: 8,
-    title: "Leer un capítulo del libro",
-    description: "Dedicar 30 minutos a leer un capítulo del libro actual.",
-    category: "personal",
-    difficulty: "Fácil",
-    isComplete: false,
-  },
-  {
-    id: 9,
-    title: "Planificar viaje de vacaciones",
-    description:
-      "Investigar destinos y hacer un plan para las próximas vacaciones.",
-    category: "travel",
-    difficulty: "Moderado",
-    isComplete: false,
-  },
-  {
-    id: 10,
-    title: "Aprender una nueva receta",
-    description: "Buscar una receta nueva y cocinarla en casa.",
-    category: "cooking",
-    difficulty: "Moderado",
-    isComplete: false,
-  },
 ];
