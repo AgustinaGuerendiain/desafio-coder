@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput, Pressable, Image } from "react-native";
 import React, { useState } from "react";
 import styles from "./LoginStyle";
 import { useDispatch } from "react-redux";
@@ -20,31 +20,40 @@ const Login = ({ navigation }) => {
       .unwrap()
       .then(result => {
         dispatch(setUser(result));
+      })
+      .catch(error => {
+        console.error("Error during login:", error.data.message);
       });
   };
 
   return (
     <View style={styles.container}>
+      <Image source={require("../../assets/images/elan.png")} />
       <View style={styles.loginContainer}>
-        <Text>Login to start</Text>
-        <TextInput
-          style={styles.inputEmail}
-          onChangeText={setEmail}
-          value={email}
-        />
-        <TextInput
-          style={styles.inputEmail}
-          onChangeText={setPassword}
-          value={password}
-        />
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Email</Text>
+          <TextInput
+            style={styles.inputEmail}
+            onChangeText={setEmail}
+            value={email}
+          />
+        </View>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Contraseña</Text>
+          <TextInput
+            style={styles.inputEmail}
+            onChangeText={setPassword}
+            value={password}
+          />
+        </View>
         <Pressable style={styles.loginButton} onPress={onSubmit}>
-          <Text>Login</Text>
+          <Text style={styles.textButton}>Iniciar sesión</Text>
         </Pressable>
-        <Text>No have an account?</Text>
+        <Text>¿No tienes cuenta? Registrate</Text>
         <Pressable
-          style={styles.loginButton}
+          style={styles.signupButton}
           onPress={() => navigation.navigate("Signup")}>
-          <Text>Sign up</Text>
+          <Text style={styles.textButton}>Registrarse</Text>
         </Pressable>
       </View>
     </View>

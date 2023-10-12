@@ -57,6 +57,11 @@ const Profile = ({ navigation }) => {
           setCameraImage(`data:image/jpeg;base64,${result.assets[0].base64}`),
         );
         setIsPressableVisible(true);
+      } else {
+        Alert.alert(
+          "Permiso de cámara denegado",
+          "Por favor, otorga permisos para acceder a la cámara en la configuración de tu dispositivo.",
+        );
       }
     }
   };

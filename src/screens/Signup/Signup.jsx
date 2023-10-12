@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput, Pressable, Image } from "react-native";
 import React from "react";
 import styles from "./SignupStyle";
 import { useState } from "react";
@@ -23,36 +23,50 @@ const Signup = ({ navigation }) => {
       .unwrap()
       .then(result => {
         dispatch(setUser(result));
+      })
+      .catch(error => {
+        console.error("Error during signup:", error.data.message);
       });
   };
 
   return (
     <View style={styles.container}>
+      <Image source={require("../../assets/images/elan.png")} />
+      <Text style={styles.textWelcome}>¡Hola!</Text>
+      <Text style={styles.textWelcome}>falta poco para conocernos</Text>
       <View style={styles.loginContainer}>
-        <Text>Signup to start</Text>
-        <TextInput
-          style={styles.inputEmail}
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.inputEmail}
-          value={password}
-          onChangeText={setPassword}
-        />
-        <TextInput
-          style={styles.inputEmail}
-          value={confirmPass}
-          onChangeText={setConfirmPass}
-        />
-        <Pressable style={styles.loginButton} onPress={onSubmit}>
-          <Text>Signup</Text>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Email</Text>
+          <TextInput
+            style={styles.inputEmail}
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Contraseña</Text>
+          <TextInput
+            style={styles.inputEmail}
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Confirmar contraseña</Text>
+          <TextInput
+            style={styles.inputEmail}
+            value={confirmPass}
+            onChangeText={setConfirmPass}
+          />
+        </View>
+        <Pressable style={styles.signupButton} onPress={onSubmit}>
+          <Text style={styles.textButton}>Registrarse</Text>
         </Pressable>
-        <Text>Already have an account?</Text>
+        <Text>¿Ya sos usuario? Inicia sesión</Text>
         <Pressable
           style={styles.loginButton}
           onPress={() => navigation.navigate("Login")}>
-          <Text>Login</Text>
+          <Text style={styles.textButton}>Iniciar sesión</Text>
         </Pressable>
       </View>
     </View>
