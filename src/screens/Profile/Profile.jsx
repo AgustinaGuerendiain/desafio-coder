@@ -4,7 +4,7 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  Pressable,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { Header } from "../../components";
@@ -13,8 +13,11 @@ import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { setCameraImage } from "../../features/auth/authSlice";
 import { usePostProfileImageMutation } from "../../services/profileApi";
+import * as ExpoLocation from "expo-location";
+import { useState } from "react";
+import { useEffect } from "react";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const AlertNewFeature = () =>
     Alert.alert("¡New feature!", "Proximamente", [
       { text: "OK", onPress: () => console.log("OK Pressed") },
@@ -22,6 +25,10 @@ const Profile = () => {
 
   const image = useSelector(state => state.auth.imageCamera);
   const { localId } = useSelector(state => state.auth);
+  const [myLocation, setMyLocation] = useState({ latitude: "", longitude: "" });
+  const [error, setError] = useState("");
+  const [isPressableVisible, setIsPressableVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   const [triggerSaveProfileImage, result] = usePostProfileImageMutation();
 
@@ -49,75 +56,116 @@ const Profile = () => {
         dispatch(
           setCameraImage(`data:image/jpeg;base64,${result.assets[0].base64}`),
         );
+        setIsPressableVisible(true);
       }
     }
   };
 
   const confirmImage = () => {
-    triggerSaveProfileImage({ image, localId });
+    triggerSaveProfileImage({ image, localId })
+      .unwrap()
+      .then(result => {
+        setIsPressableVisible(false);
+      });
   };
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await ExpoLocation.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setError("permission to access location was denied");
+      }
+      let location = await ExpoLocation.getCurrentPositionAsync({});
+      setMyLocation({
+        latitude: location?.coords.latitude,
+        longitude: location?.coords.longitude,
+      });
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
       <Header title={"Perfil"} />
       <View style={styles.containerImg}>
-        {image ? (
-          <Image style={styles.image} source={{ uri: image }} />
-        ) : (
-          <Image
-            style={styles.image}
-            source={require("../../assets/images/profile.png")}
-          />
-        )}
-        <Pressable styles={styles.cameraButton} onPress={pickImage}>
-          <Text>tomar foto de perfil</Text>
-        </Pressable>
-        <Pressable
-          styles={styles.cameraButton}
-          onPress={confirmImage}
-          style={styles.cameraButton}>
-          <Text>confirmar</Text>
-        </Pressable>
+        <View style={styles.imageContainer}>
+          {image ? (
+            <Image style={styles.image} source={{ uri: image }} />
+          ) : (
+            <Image
+              style={styles.image}
+              source={require("../../assets/images/profile.png")}
+            />
+          )}
+        </View>
         <View style={styles.containerName}>
           <Text style={styles.textTitle}>Agustina</Text>
           <Text style={styles.textTitle}>Guerendiain</Text>
         </View>
       </View>
       <View style={styles.containerInfo}>
-        <View style={styles.containerDetails}>
-          <Text style={styles.containerTitle}>Datos personales</Text>
-          <View style={styles.input}>
-            <Text style={styles.inputTitle}>Nombre</Text>
-            <Text style={styles.inputValue}>Agustina Guerendiain</Text>
+        <ScrollView>
+          <View style={styles.containerDetails}>
+            <Text style={styles.containerTitle}>Datos personales</Text>
+            <View style={styles.input}>
+              <Text style={styles.inputTitle}>Nombre</Text>
+              <Text style={styles.inputValue}>Agustina Guerendiain</Text>
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputTitle}>Email</Text>
+              <Text style={styles.inputValue}>agusguere@gmail.com</Text>
+            </View>
           </View>
-          <View style={styles.input}>
-            <Text style={styles.inputTitle}>Email</Text>
-            <Text style={styles.inputValue}>agusguere@gmail.com</Text>
+
+          <View style={styles.containerConfigurations}>
+            <Text style={styles.containerTitle}>Configuración</Text>
+            <TouchableOpacity
+              style={styles.containerButton}
+              onPress={pickImage}>
+              <Text style={styles.inputValue}>Cambiar foto de perfil</Text>
+            </TouchableOpacity>
+            {isPressableVisible && (
+              <TouchableOpacity
+                style={styles.containerButtonConfirmImage}
+                onPress={confirmImage}>
+                <Text style={styles.inputValue}>Confirmar cambio de foto</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={styles.containerButton}
+              onPress={() => setIsMapVisible(true)}>
+              <Text style={styles.inputValue}>Ver mi ubicación</Text>
+            </TouchableOpacity>
+            {isMapVisible && (
+              <TouchableOpacity
+                style={styles.containerButtonConfirmImage}
+                onPress={() => setIsMapVisible(false)}>
+                {myLocation ? (
+                  <View style={styles.withoutLocation}>
+                    <Text style={styles.inputValue}>
+                      Lat: {myLocation.latitude}, Longitude:{" "}
+                      {myLocation.longitude}
+                    </Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Text style={styles.inputValue}>{error}</Text>
+                  </View>
+                )}
+                <Text style={styles.inputValue}>Cerrar ubicacion</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={styles.containerButton}
+              onPress={AlertNewFeature}>
+              <Text style={styles.inputValue}>Ajustes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.containerButton}
+              onPress={AlertNewFeature}>
+              <Text style={styles.inputValue}>Ayuda</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.containerConfigurations}>
-          <Text style={styles.containerTitle}>Configuración</Text>
-          <TouchableOpacity
-            style={styles.containerButton}
-            onPress={AlertNewFeature}>
-            <Text style={styles.inputValue}>Notificaciones</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.containerButton}
-            onPress={AlertNewFeature}>
-            <Text style={styles.inputValue}>Preferencias</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.containerButton}
-            onPress={AlertNewFeature}>
-            <Text style={styles.inputValue}>Ajustes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.containerButton}
-            onPress={AlertNewFeature}>
-            <Text style={styles.inputValue}>Ayuda</Text>
-          </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );

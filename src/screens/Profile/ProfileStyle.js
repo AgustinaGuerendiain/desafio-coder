@@ -4,6 +4,7 @@ import { colors } from "../../contants/colors";
 export default styles = StyleSheet.create({
   container: {
     flexDirection: "column",
+    flex: 1,
   },
   containerImg: {
     height: 288,
@@ -23,6 +24,7 @@ export default styles = StyleSheet.create({
   },
   containerInfo: {
     padding: 16,
+    flex: 1,
   },
   containerDetails: {},
   input: { flexDirection: "row", marginBottom: 16 },
@@ -54,13 +56,22 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 10,
   },
-  cameraButton: {
-    backgroundColor: colors.secondary,
-    height: 50,
-    width: "100%",
-  },
   image: {
-    width: 200,
-    height: 200,
+    width: "100%",
+    height: "100%",
+  },
+  imageContainer: {
+    width: 172,
+    height: 172,
+    borderRadius: 86,
+    overflow: "hidden",
+    marginTop: 20,
+  },
+  containerButtonConfirmImage: {
+    marginBottom: 8,
+    backgroundColor: colors.secondary,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 10,
   },
 });
