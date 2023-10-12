@@ -54,4 +54,13 @@ export default styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 10,
   },
+  cameraButton: {
+    backgroundColor: colors.secondary,
+    height: 50,
+    width: "100%",
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
 });
