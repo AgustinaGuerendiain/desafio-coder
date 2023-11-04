@@ -90,7 +90,7 @@ const Profile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header title={"Perfil"} />
+      <Header title={"Perfil"} logout={true} />
       <View style={styles.containerImg}>
         <View style={styles.imageContainer}>
           {image ? (

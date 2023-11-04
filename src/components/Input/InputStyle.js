@@ -3,15 +3,12 @@ import { colors } from "../../contants/colors";
 
 export default styles = StyleSheet.create({
   containerInput: {
-    paddingBottom: 16,
-    flexDirection: "column",
-    alignItems: "flex-start",
-    width: "100%",
+    width: "95%",
+    marginBottom: 10,
   },
   label: {
-    fontFamily: "MontserratSemiBold",
+    fontFamily: "MontserratMedium",
     fontSize: 16,
-    marginBottom: 8,
     color: colors.primaryDark,
   },
   inputText: {
@@ -19,8 +16,12 @@ export default styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#fff",
     width: "100%",
-    borderRadius: 10,
+    borderRadius: 8,
     paddingLeft: 8,
     fontFamily: "MontserratRegular",
+    backgroundColor: colors.secondary,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 8,
   },
 });

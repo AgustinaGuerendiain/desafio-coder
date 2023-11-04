@@ -19,7 +19,7 @@ export const authSlice = createSlice({
       };
     },
     clearUser: () => {
-      return { user: null, token: null };
+      return { user: null, token: null, localId: null };
     },
     setCameraImage: (state, action) => {
       return {
