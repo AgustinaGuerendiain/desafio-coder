@@ -24,7 +24,7 @@ const Profile = ({ navigation }) => {
     ]);
 
   const image = useSelector(state => state.auth.imageCamera);
-  const { localId } = useSelector(state => state.auth);
+  const { localId, name, email, lastName } = useSelector(state => state.auth);
   const [myLocation, setMyLocation] = useState({ latitude: "", longitude: "" });
   const [error, setError] = useState("");
   const [isPressableVisible, setIsPressableVisible] = useState(false);
@@ -103,8 +103,8 @@ const Profile = ({ navigation }) => {
           )}
         </View>
         <View style={styles.containerName}>
-          <Text style={styles.textTitle}>Agustina</Text>
-          <Text style={styles.textTitle}>Guerendiain</Text>
+          <Text style={styles.textTitle}>{name}</Text>
+          <Text style={styles.textTitle}>{lastName}</Text>
         </View>
       </View>
       <View style={styles.containerInfo}>
@@ -113,11 +113,13 @@ const Profile = ({ navigation }) => {
             <Text style={styles.containerTitle}>Datos personales</Text>
             <View style={styles.input}>
               <Text style={styles.inputTitle}>Nombre</Text>
-              <Text style={styles.inputValue}>Agustina Guerendiain</Text>
+              <Text style={styles.inputValue}>
+                {name} {lastName}
+              </Text>
             </View>
             <View style={styles.input}>
               <Text style={styles.inputTitle}>Email</Text>
-              <Text style={styles.inputValue}>agusguere@gmail.com</Text>
+              <Text style={styles.inputValue}>{email}</Text>
             </View>
           </View>
 

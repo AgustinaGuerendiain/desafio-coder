@@ -21,13 +21,15 @@ const Login = ({ navigation }) => {
     })
       .unwrap()
       .then(result => {
-        dispatch(setUser(result));
         insertSession({
           localId: result.localId,
           email: result.email,
           token: result.idToken,
         })
-          .then(result => console.log("result", result))
+          .then(insertResult => {
+            console.log("result en login", insertResult);
+            dispatch(setUser(result));
+          })
           .catch(error => {
             Alert.alert("¡Error!", error.data.error.message, [
               { text: "Aceptar", onPress: () => console.log("OK") },

@@ -10,6 +10,7 @@ import Step1 from "./components/Step1/Step1";
 import Step2 from "./components/Step2/Step2";
 import Step3 from "./components/Step3/Step3";
 import { colors } from "../../contants/colors";
+import { insertSession, insertUserData } from "../../db";
 
 const Signup = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -30,7 +31,25 @@ const Signup = ({ navigation }) => {
     })
       .unwrap()
       .then(result => {
-        dispatch(setUser(result));
+        insertSession({
+          localId: result.localId,
+          email: result.email,
+          token: result.idToken,
+        })
+          .then(() => {
+            insertUserData({
+              localId: result.localId,
+              name,
+              lastName,
+              email,
+            });
+            dispatch(setUser(result));
+          })
+          .catch(error => {
+            Alert.alert("¡Error!", error.message, [
+              { text: "Aceptar", onPress: () => console.log("OK") },
+            ]);
+          });
       })
       .catch(error => {
         Alert.alert("¡Error!", error.data.error.message, [
