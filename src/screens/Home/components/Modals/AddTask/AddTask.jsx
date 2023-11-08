@@ -1,25 +1,41 @@
-import { View, Text, Modal, TouchableOpacity, ScrollView } from "react-native";
 import React, { useState } from "react";
+import { Modal, TouchableOpacity, ScrollView, View, Text } from "react-native";
 import styles from "./AddTaskStyle";
 import { Input } from "../../../../../components";
+import { useAddTaskMutation } from "../../../../../services/tasksApi";
+import { useSelector } from "react-redux";
 
-const AddTask = ({ showModalAddTask, setShowModalAddTask, addTask }) => {
+const AddTask = ({ showModalAddTask, setShowModalAddTask }) => {
+  const { localId } = useSelector(state => state.auth);
+
   const [nuevaTarea, setNewTask] = useState({
     title: "",
     description: "",
     category: "",
     difficulty: "",
+    isComplete: false,
   });
 
-  const handleAddTask = () => {
-    addTask(nuevaTarea);
-    setNewTask({
-      title: "",
-      description: "",
-      category: "",
-      difficulty: "",
-    });
-    setShowModalAddTask(false);
+  const [addTask, { isLoading, error }] = useAddTaskMutation();
+
+  const handleAddTask = async () => {
+    try {
+      const response = await addTask({
+        localId: localId,
+        task: nuevaTarea,
+      });
+      console.log("Tarea añadida:", response.data);
+      setNewTask({
+        title: "",
+        description: "",
+        category: "",
+        difficulty: "",
+        isComplete: false,
+      });
+      setShowModalAddTask(false);
+    } catch (error) {
+      console.error("Error al añadir la tarea:", error);
+    }
   };
 
   return (

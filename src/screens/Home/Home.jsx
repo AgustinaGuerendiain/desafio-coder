@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import { Header } from "../../components";
-import tasks from "../../data/tasks";
 import { AddModal, DeleteModal, TaskItem } from "./components";
 import styles from "./HomeStyle";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import {
+  useGetTasksQuery,
+  useAddTaskMutation,
+  useDeleteTaskMutation,
+} from "../../services/tasksApi";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTask,
@@ -13,13 +17,18 @@ import {
 } from "../../features/tasksSlice";
 
 const Home = ({ navigation, route }) => {
-  const taskList = useSelector(state => state.tasks);
+  const dispatch = useDispatch();
+  const { localId } = useSelector(state => state.auth);
+  const { data: tasksFromApi, error: getTasksError } =
+    useGetTasksQuery(localId);
   const [idTask, setIdTask] = useState();
-
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalAddTask, setShowModalAddTask] = useState(false);
 
-  const dispatch = useDispatch();
+  const [addTaskApi, { isLoading: addingTask, error: addTaskError, refetch }] =
+    useAddTaskMutation();
+  const [deleteTaskApi, { isLoading: deletingTask, error: deleteTaskError }] =
+    useDeleteTaskMutation();
 
   const handleModalDelete = id => {
     setIdTask(id);
@@ -30,22 +39,44 @@ const Home = ({ navigation, route }) => {
     setShowModalAddTask(true);
   };
 
-  const handleDelete = () => {
-    if (idTask) {
-      dispatch(deleteTask(idTask));
+  const handleDelete = async () => {
+    try {
+      await deleteTaskApi({ localId: localId, taskId: idTask });
+      setShowModalDelete(false);
+    } catch (error) {
+      console.error("Error al eliminar la tarea:", error);
     }
-    setShowModalDelete(false);
   };
 
-  const handleAddTask = newTask => {
-    const ultimoID = taskList[taskList.length - 1].id;
-    const nuevaTarea = {
-      id: ultimoID + 1,
-      ...newTask,
-      isComplete: false,
-    };
-    dispatch(addTask(nuevaTarea));
+  const handleAddTask = async newTask => {
+    try {
+      const response = await addTaskApi({
+        localId: localId,
+        task: newTask,
+      });
+      const addedTask = {
+        id: response.data.name,
+        ...newTask,
+        isComplete: false,
+      };
+      dispatch(addTask(addedTask));
+      refetch();
+      setShowModalAddTask(false);
+    } catch (error) {
+      console.error("Error al añadir la tarea:", error);
+    }
   };
+
+  const [tasksArray, setTasksArray] = useState([]);
+
+  useEffect(() => {
+    if (tasksFromApi) {
+      const updatedTasksArray = Object.values(tasksFromApi);
+      setTasksArray(updatedTasksArray);
+    }
+  }, [tasksFromApi]);
+
+  console.log(tasksFromApi);
 
   return (
     <>
@@ -54,7 +85,7 @@ const Home = ({ navigation, route }) => {
       </View>
       <View style={styles.container}>
         <FlatList
-          data={taskList}
+          data={tasksArray}
           keyExtractor={task => task.id}
           renderItem={({ item }) => (
             <TaskItem
